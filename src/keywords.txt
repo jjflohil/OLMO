@@ -1,0 +1,73 @@
+StepRegulator	KEYWORD1
+GetBPM	        KEYWORD2
+
+
+MIDI
+#######################################
+# Syntax Coloring Map For Keyboard
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+MIDIUSB	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin		KEYWORD2
+available	KEYWORD2
+accept		KEYWORD2
+read		KEYWORD2
+flush   	KEYWORD2
+sendMIDI   	KEYWORD2
+write   	KEYWORD2
+sendMIDI 	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+#######################################
+# Syntax Coloring Map For AccelStepper
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+AccelStepper	KEYWORD1
+MultiStepper	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+moveTo	KEYWORD2
+move	KEYWORD2
+run	KEYWORD2
+runSpeed	KEYWORD2
+setMaxSpeed	KEYWORD2
+setAcceleration	KEYWORD2
+setSpeed	KEYWORD2
+speed	KEYWORD2
+distanceToGo	KEYWORD2
+targetPosition	KEYWORD2
+currentPosition	KEYWORD2
+setCurrentPosition	KEYWORD2
+runToPosition	KEYWORD2
+runSpeedToPosition	KEYWORD2
+runToNewPosition	KEYWORD2
+stop	KEYWORD2
+disableOutputs	KEYWORD2
+enableOutputs	KEYWORD2
+setMinPulseWidth	KEYWORD2
+setEnablePin	KEYWORD2
+setPinsInverted	KEYWORD2
+maxSpeed	KEYWORD2
+#######################################
+# Constants (LITERAL1)
+#######################################
+ 

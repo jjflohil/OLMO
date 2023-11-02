@@ -1,0 +1,53 @@
+
+//TestModes (only one at a time please)
+bool RainbowMode = false;
+//TimerAtmega32u4 Timers;
+//Timers::SetupTimers();
+//Timers.SetupTimer(15);
+#include <TimerAtmega32u4.h>
+//==== ==== ==== ==== ==== Interrupt service routines ==== ==== ==== ==== ====//
+
+//ISR(TIMER1_COMPA_vect){//timer1 interrupt 50kHz of zoiets
+//}
+
+
+/*
+        //Colorwheel depending on potmeter
+        if(RainbowMode){
+          for(int i=0;i<16;i++){
+              LED_R.setPWM(i, 4096*(PotAll[i]>=127),  (PotAll[i]*32)*(PotAll[i]<127));
+              LED_G.setPWM(i,4096 * ((PotAll[i]==0)+(PotAll[i]>250)), ((127-PotAll[i])*32)*(PotAll[i]<127) + ((PotAll[i]+127)*32) * (PotAll[i]>=127)* (PotAll[i]<253) );
+              LED_B.setPWM(i, 4096*(PotAll[i]<=128) ,   ((255-PotAll[i])*32)*(PotAll[i]>127));
+          }
+        }
+*/
+
+/*
+  //Counter++;
+  CounterRead++;
+  //if(Counter >=  (CDOffset + BPMTimeDiff * 15/4)){
+  //  Counter = 0;
+  //  switchstep =1-switchstep;
+  //  if(switchstep){
+      //PORTE = PORTE | B01000000;
+  //  }
+  //  else{
+      //PORTE = PORTE & B10111111;
+  //  }
+ // }
+  
+  if(CounterRead >= UpdateInterval){
+    CounterRead = 0;
+    CheckInputs = !CheckInputs;
+    PotCounter++;
+    //Potmeter only needs to be read 1/10 times buttons
+    if(PotCounter>10){
+      ReadPot = !ReadPot;
+      PotCounter = 0;
+    }
+  }
+} 
+//ISR(TIMER4_COMPA_vect){//timer4 interrupt 
+
+//} 
+*/

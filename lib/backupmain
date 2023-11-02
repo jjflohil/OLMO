@@ -1,0 +1,123 @@
+#include <Arduino.h>
+
+
+#define EN_PIN    7 //enable (CFG6)
+#define DIR_PIN   8 //direction
+#define STEP_PIN  9 //step
+
+#define ZeroPin  A1
+#define BPMPin   A0
+#define MotorPot A3
+
+uint32_t T = 0;
+uint16_t Ts = 1000;
+
+bool Pulse;
+
+float BPM_ref = 180;
+float BPM_actP = 0;
+float BPM_act = 0;
+float BPM_offset = 0;
+uint16_t vel_ref = 0;
+
+bool pulse1  = false;
+bool pulse1p = false;
+uint16_t T_pulse  = 0;
+uint16_t T_pulseP = 0;
+
+
+bool plus  = false;
+bool plusP  = false;
+bool minus = false;
+bool minusP = false;
+bool nulPoint = false;
+bool nulPointP = false;
+void setup() {
+
+cli();
+  TCCR2A = 0;// set entire TCCR2A register to 0
+  TCCR2B = 0;// same for TCCR2B
+  TCNT2  = 0;//initialize counter value to 0
+  // set compare match register for 8khz increments
+  OCR2A = 39;// = (16*10^6) / (50000*8) - 1 (must be <256)
+  // turn on CTC mode
+  TCCR2A |= (1 << WGM21);
+  // Set CS21 bit for 64 prescaler
+  TCCR2B |= (1 << CS21);   
+  // enable timer compare interrupt
+  TIMSK2 |= (1 << OCIE2A);
+  sei();
+  
+  pinMode(5, INPUT_PULLUP);
+  pinMode(6, INPUT_PULLUP);
+  //Stepper init
+  pinMode(EN_PIN, OUTPUT);
+  digitalWrite(EN_PIN, HIGH); //deactivate driver (LOW active)
+  pinMode(DIR_PIN, OUTPUT);
+  digitalWrite(DIR_PIN, HIGH); //LOW or HIGH
+  pinMode(STEP_PIN, OUTPUT);
+  digitalWrite(STEP_PIN, LOW);
+  digitalWrite(EN_PIN, LOW); //activate driver
+
+  Serial.begin(9600);
+}
+
+void loop() {
+  plusP = plus;
+  plus = digitalRead(5);
+  nulPointP = nulPoint;
+  nulPoint =  digitalRead(ZeroPin);
+  if(nulPointP && !nulPoint){
+    //Serial.println("ZeroDetected");
+  }
+  minusP = minus;
+  minus = digitalRead(6);
+  if(plus and !plusP){
+    BPM_ref = BPM_ref+5;
+  }
+  if(minus and !minusP){
+    BPM_ref = BPM_ref-5;
+  }
+  if(BPM_ref>180){
+    BPM_ref = 180;
+  }
+  if(BPM_ref<1){
+    BPM_ref = 1;
+  }
+  // 16 pulses / revolution
+  // delta time / pulse = Tcurrentpulse - Tlastpulse
+  // BPM actual = 
+  //BPM_ref = map(analogRead(MotorPot),0,1023,0,180);
+  //Serial.println(analogRead(BPMPin));
+  pulse1p = pulse1;
+  pulse1  = digitalRead(BPMPin);
+  if(pulse1 && !pulse1p){
+    T_pulseP =  T_pulse;
+    T_pulse  = millis();
+    BPM_act = (BPM_act + (15e3 / (T_pulse-T_pulseP))) / 2;
+    BPM_offset = max(0,min(10,BPM_offset + BPM_ref - BPM_act));
+    //Serial.print(BPM_ref);
+    //Serial.print(" , ");
+    //Serial.println(BPM_act);
+  }
+    // BPM to pulses/sec = BPM/4/60 * N where N is the number of steps per revolution
+    // N is in this case 200 * 4 = 800 with stealthchop Quarterstep
+    // Ts = 1/2 * 1e6 * 60 / (800 * BPM_ref);
+    Ts = round(3e5 / (2 * BPM_ref + BPM_offset));
+    if(micros() >= (T+Ts)){
+    T = micros();
+    Pulse = 1-Pulse;
+    digitalWrite(STEP_PIN, Pulse);
+  }
+}
+
+// print stuff
+  //Print result of the buttons
+  if(switch1[1]){Serial.println("switch1UpP = ");}
+  if(switch1[2]){Serial.println("switc1UpN = ");}
+  if(switch1[4]){Serial.println("switch1DnP = ");}
+  if(switch1[5]){Serial.println("switch1DnN = ");}
+  if(switch2[1]){Serial.println("switch2UpP = ");}
+  if(switch2[2]){Serial.println("switch2UpN = ");}
+  if(switch2[4]){Serial.println("switch2DnP = ");}
+  if(switch2[5]){Serial.println("switch2DnN = ");}

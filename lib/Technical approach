@@ -1,0 +1,44 @@
+
+//================================================================================================//
+// Input strategy
+//================================================================================================//
+
+The Drumcomputer has 16 channels, which each have the following inputs:
+1 Analog PotMeter
+2 Analog PhotoTransistors -> These will preferrably be read to digital input 
+2 Digital Switch contacts
+
+This inputs will be divided among analog and digital multiplexer boards 74HC4067 as follows:
+Board1 : Pin A0     : 16 x PotMeter
+Board2 : Pin D9     : 16 x Switch Up
+Board3 : Pin D10    : 16 x Switch Down
+Board5 : Pin D11    : 16 x PhotoTransistor
+
+The Channel pins will be used for all the multiplexer boards. So by selecting a channel, all information 
+of this physical channel wil be simultaniously gathered. The init function of the class will thus take eight
+arguments:
+
+Input_Multiplex(InputPin0,InputPin1,InputPin2,InputPin3,ChPin0,ChPin1,ChPin2,ChPin3)
+
+When the input function is called, the channel is gives as argument and all inputs are received. 
+
+//================================================================================================//
+// Process strategy
+//================================================================================================//
+
+The function of the phototransistor is to trigger a midi note. Whether the midi note is played depends
+on an internal state which can be set true or false with the swith input. 
+
+The switch input can have two functions, which is toggled by pressing a "shift" function button:
+Function 1 : Toggle the internal state to true or false
+Function 2 : Swich between midi note (semitone up or down)
+
+The potmeter input will be used for another midi effect. This is still T.B.D.
+
+The Channel processing function will have as inputs: 
+Input1: Struct channel buttons
+Input2: Shift
+The Channel processing function will have as outputs:
+Output1: Midi note
+Output2: Midi state
+Output3: Midi effect
