@@ -5,6 +5,7 @@
 #include <Wire.h>
 #include <PWM/Adafruit_PWMServoDriver.h>
 #include "ProcessMenu.h"
+#include <SoftwareSerial.h>
 
 ProcessMenu DispMenu(0,1);
 // A0,A1,A2,A3  Channel pins Multiplexers
@@ -28,6 +29,10 @@ int midi_CH       = 2;
 int Preview_CH    = 1;
 int N_Laser       = 16;
 int DebounceTimeMs = 150;
+
+
+ //AnalogMidi
+  SoftwareSerial MidiSerial(5, 4);
 
 //Define PWM controllers
 Adafruit_PWMServoDriver pwm1 = Adafruit_PWMServoDriver(0x40);
@@ -122,10 +127,16 @@ uint32_t DebounceTime[16];
 void noteOn(byte channel, byte pitch, byte velocity) {
   midiEventPacket_t noteOn = {0x09, 0x90 | channel, pitch, velocity};
   MidiUSB.sendMIDI(noteOn);
+  MidiSerial.write(0x90);
+  MidiSerial.write(pitch);
+  MidiSerial.write(velocity);
 }
 void noteOff(byte channel, byte pitch, byte velocity) {
   midiEventPacket_t noteOff = {0x08, 0x80 | channel, pitch, velocity};
   MidiUSB.sendMIDI(noteOff);
+  MidiSerial.write(0x90);
+  MidiSerial.write(pitch);
+  MidiSerial.write(velocity);
 }
 void controlChange(byte channel, byte control, byte value) {
   midiEventPacket_t event = {0x0B, 0xB0 | channel, control, value};
@@ -173,6 +184,7 @@ void setup() {
   }
 
   //Serial.begin(9600);
+  MidiSerial.begin(31250);
   DDRF = B11111111;
 
   pinMode(8,INPUT_PULLUP);
