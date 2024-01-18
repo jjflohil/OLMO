@@ -1,3 +1,16 @@
+// This script is used to control OLMO (Optical Laser Midi Operator)
+//  - The controller is an Arduino Leonardo
+//  - Includes 16 tracks with the following components:
+//    laser, RGB led, phototransistor, potentiometer, double switch
+//  - Includes a stepper motor control
+//  - Led digit display and main control interface buttons
+//  - MIDI control uver USB
+//  - MIDI output over old-school MIDI
+//
+//  This code can be freely used for personal and educational purposes
+//
+//  Last update: 18 Jan 2024,  Jasper Flohil
+
 #include <Arduino.h>
 #include <AccelStepper.h>
 #include <Inputs/Inputs_Multiplex.h>
@@ -29,7 +42,6 @@ int midi_CH       = 2;
 int Preview_CH    = 1;
 int N_Laser       = 16;
 int DebounceTimeMs = 150;
-
 
  //AnalogMidi
   SoftwareSerial MidiSerial(5, 4);
@@ -123,7 +135,7 @@ const byte MidiClock  = 0xf8;
 uint32_t  MidiTime    = 0;
 uint32_t DebounceTime[16];
 
-//==== TEMP MIDI SHIZZLE (Maak hier een library van)
+//==== TEMP MIDI DINGEN (Maak hier een library van)
 void noteOn(byte channel, byte pitch, byte velocity) {
   midiEventPacket_t noteOn = {0x09, 0x90 | channel, pitch, velocity};
   MidiUSB.sendMIDI(noteOn);
